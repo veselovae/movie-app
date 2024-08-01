@@ -5,11 +5,11 @@
 
     import { ref } from "vue";
     const nvigationItems = ref<string[]>([
-        "Home",
-        "Whatchlist",
-        "Categories",
-        "Movie",
-        "Series",
+        "Главная",
+        "Избранное",
+        "Категории",
+        "Фильмы",
+        "Сериалы",
     ]);
 </script>
 <template>
@@ -35,7 +35,10 @@
         justify-content: space-between;
         align-items: center;
         padding: 20px 50px;
-        background-color: lightgray;
+        background-color: white;
+        position: fixed;
+        z-index: 30;
+        width: 100%;
     }
 
     .logo-and-navigation-container {
@@ -50,10 +53,6 @@
         gap: 30px;
         font-weight: 600;
         font-size: 20px;
-    }
-
-    .navigation-item {
-        cursor: pointer;
     }
 
     .logo {
