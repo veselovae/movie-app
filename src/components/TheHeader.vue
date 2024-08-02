@@ -35,10 +35,11 @@
         justify-content: space-between;
         align-items: center;
         padding: 20px 50px;
-        background-color: white;
+        background-color: #000000a1;
         position: fixed;
         z-index: 30;
         width: 100%;
+        color: #fff;
     }
 
     .logo-and-navigation-container {
@@ -60,7 +61,7 @@
     }
 
     .search-container {
-        border: 1px black solid;
+        border: 1px #fff solid;
         border-radius: 50%;
         cursor: pointer;
         display: flex;
