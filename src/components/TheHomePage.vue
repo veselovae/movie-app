@@ -1,16 +1,58 @@
 <script setup lang="ts">
     import { onMounted, ref, computed } from "vue";
     import ButtonsComponent from "./ButtonsComponent.vue";
+    import ThePopularSection from "./ThePopularSection.vue";
 
-    const options: object = {
-        method: "GET",
-        headers: {
-            accept: "application/json",
-            "X-API-KEY": "DTJYGKA-TZXM1QK-NN48GZC-CFDX2FR",
-        },
-    };
+    interface IMovie {
+        ageRating: number | null;
+        alternativeName: string | null;
+        audience?: object[] | null;
+        backdrop: {
+            previeUrl: string | null;
+            url: string;
+        };
+        budget?: object | null;
+        countries: object[] | null;
+        deleteedAt: any;
+        description: string | null;
+        distributors: any;
+        enName: string | null;
+        externalId: any;
+        facts: object[];
+        fees: any;
+        genres: object[] | null;
+        id: number;
+        isSeries: boolean | null;
+        lists: string[];
+        movieLength: number | null;
+        name: string;
+        names: any;
+        networks: any;
+        persons: object[] | null;
+        poster: any;
+        premiere: object | null;
+        rating: {
+            kp?: number;
+            imdb?: number;
+        };
+        ratingMpaa: any;
+        seriesLength: any;
+        shortDescription: string | null;
+        slogan: string | null;
+        status: any;
+        ticketsOnSale: any;
+        top10: any;
+        top250: any;
+        totalSeriesLength: any;
+        type: string;
+        typeNumber: number | null;
+        updatedAt: any;
+        votes: any;
+        watchability: any;
+        year: number | null;
+    }
 
-    let recomendedMovie = ref<object>(null);
+    let recomendedMovie = ref<IMovie>(null);
 
     // &year=2024
 
@@ -29,30 +71,31 @@
     //     ],
     // };
 
-    const getFetch = async () => {
+    const options: object = {
+        method: "GET",
+        headers: {
+            accept: "application/json",
+            "X-API-KEY": "DTJYGKA-TZXM1QK-NN48GZC-CFDX2FR",
+        },
+    };
+
+    const getRecommendedMovie = async () => {
         const response = await fetch(
             "https://api.kinopoisk.dev/v1.4/movie/random?lists=popular-films&notNullFields=backdrop.url",
             options
         );
-        const res: object = await response.json();
+        const res: IMovie = await response.json();
         recomendedMovie.value = res;
         console.log(recomendedMovie.value);
     };
 
-    const checkMovieName = async () => {
-        do {
-            getFetch();
-        } while (!recomendedMovie.value.name);
-    };
-
     onMounted((): void => {
-        // getFetch();
-        checkMovieName();
+        getRecommendedMovie();
     });
 
     const getBackgroundStyle = computed((): string => {
         return `background-image: url( ${
-            recomendedMovie.value ? recomendedMovie.value?.backdrop.url : ""
+            recomendedMovie.value ? recomendedMovie.value.backdrop.url : ""
         })`;
     });
     const getName = computed((): string => {
@@ -72,16 +115,21 @@
     });
 
     const getYear = computed((): string => {
-        return recomendedMovie.value?.year ? recomendedMovie.value?.year : "";
+        return recomendedMovie.value?.year
+            ? String(recomendedMovie.value.year)
+            : "";
     });
+
+    interface IGenre {
+        name: string;
+    }
 
     const getGenres = computed((): string => {
         if (recomendedMovie.value?.genres) {
             const genres = recomendedMovie.value.genres;
             const genresString = genres
-                .map((item: object) => item.name)
+                .map((item: IGenre) => item.name)
                 .join(", ");
-            console.log(genresString);
             return genresString;
         } else {
             return "";
@@ -106,7 +154,6 @@
 </script>
 
 <template>
-    <!--<div class="home-container" :style="getBackgroundStyle"></div>-->
     <div class="home-container" :style="getBackgroundStyle">
         <div class="background-box"></div>
         <div class="film-info-box">
@@ -140,9 +187,16 @@
                     </div>
                 </div>
                 <div class="movie-details">
-                    <div class="year movie-details-item">{{ getYear }}</div>
-                    <div class="genres movie-details-item">{{ getGenres }}</div>
-                    <div class="movie-length movie-details-item">
+                    <div class="year movie-details-item" v-if="getYear">
+                        {{ getYear }}
+                    </div>
+                    <div class="genres movie-details-item" v-if="getGenres">
+                        {{ getGenres }}
+                    </div>
+                    <div
+                        class="movie-length movie-details-item"
+                        v-if="getMovieLength"
+                    >
                         {{ getMovieLength }}
                     </div>
                 </div>
@@ -168,12 +222,16 @@
                 </ButtonsComponent>
                 <ButtonsComponent>Узнать больше</ButtonsComponent>
             </div>
+
+            <ThePopularSection />
         </div>
     </div>
 </template>
 
 <style scoped>
     .home-container {
+        overflow-y: hidden;
+        overflow-x: hidden;
         background-color: #111;
         height: 100vh;
         width: 100%;
