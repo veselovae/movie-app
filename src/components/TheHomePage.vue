@@ -222,9 +222,8 @@
                 </ButtonsComponent>
                 <ButtonsComponent>Узнать больше</ButtonsComponent>
             </div>
-
-            <ThePopularSection />
         </div>
+        <ThePopularSection />
     </div>
 </template>
 
@@ -260,7 +259,7 @@
         padding-left: 50px;
         padding-bottom: 30px;
         border-radius: 30px;
-        width: 50%;
+        width: 60%;
         /*background-color: #a1a1a167;
         box-shadow: 0px -1px 23px 29px #a1a1a167;*/
     }

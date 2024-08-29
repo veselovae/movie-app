@@ -7,3 +7,17 @@
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
+.buttons-carousel {
+    border-radius: 50%;
+    background-color: #ffffffa0;
+}
+
+.buttons-carousel:hover {
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+.buttons-carousel:hover svg {
+    fill: #000;
+}
