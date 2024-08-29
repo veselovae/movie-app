@@ -156,74 +156,76 @@
 <template>
     <div class="home-container" :style="getBackgroundStyle">
         <div class="background-box"></div>
-        <div class="film-info-box">
-            <!-- <h1>{{ getName }}</h1> -->
-            <h1>{{ getName }}</h1>
-            <div class="rating-and-details">
-                <div class="rating-box">
-                    <div class="imdb-rating rating" v-if="getIMDbRating">
-                        <img
-                            src="../assets/IMDb_Logo.png"
-                            alt="IMDb"
-                            class="rating-logo imdb-logo"
-                        />
-                        <img
-                            src="../assets/star-icon.png"
-                            class="star-rating-logo"
-                        />
-                        <span>{{ getIMDbRating }}</span>
+        <div class="home-container-main">
+            <div class="film-info-box">
+                <!-- <h1>{{ getName }}</h1> -->
+                <h1>{{ getName }}</h1>
+                <div class="rating-and-details">
+                    <div class="rating-box">
+                        <div class="imdb-rating rating" v-if="getIMDbRating">
+                            <img
+                                src="../assets/IMDb_Logo.png"
+                                alt="IMDb"
+                                class="rating-logo imdb-logo"
+                            />
+                            <img
+                                src="../assets/star-icon.png"
+                                class="star-rating-logo"
+                            />
+                            <span>{{ getIMDbRating }}</span>
+                        </div>
+                        <div class="kp-rating rating" v-if="getKPRating">
+                            <img
+                                src="../assets/Kinopoisk_logo.png"
+                                alt="KP"
+                                class="rating-logo kp-logo"
+                            />
+                            <img
+                                src="../assets/star-icon.png"
+                                class="star-rating-logo"
+                            />
+                            <span>{{ getKPRating }}</span>
+                        </div>
                     </div>
-                    <div class="kp-rating rating" v-if="getKPRating">
-                        <img
-                            src="../assets/Kinopoisk_logo.png"
-                            alt="KP"
-                            class="rating-logo kp-logo"
-                        />
-                        <img
-                            src="../assets/star-icon.png"
-                            class="star-rating-logo"
-                        />
-                        <span>{{ getKPRating }}</span>
+                    <div class="movie-details">
+                        <div class="year movie-details-item" v-if="getYear">
+                            {{ getYear }}
+                        </div>
+                        <div class="genres movie-details-item" v-if="getGenres">
+                            {{ getGenres }}
+                        </div>
+                        <div
+                            class="movie-length movie-details-item"
+                            v-if="getMovieLength"
+                        >
+                            {{ getMovieLength }}
+                        </div>
                     </div>
                 </div>
-                <div class="movie-details">
-                    <div class="year movie-details-item" v-if="getYear">
-                        {{ getYear }}
-                    </div>
-                    <div class="genres movie-details-item" v-if="getGenres">
-                        {{ getGenres }}
-                    </div>
-                    <div
-                        class="movie-length movie-details-item"
-                        v-if="getMovieLength"
+                <div class="movie-short-description">
+                    {{ getDescription }}
+                </div>
+                <div class="buttons-box">
+                    <!--buttons x2-->
+                    <ButtonsComponent class="play-now-btn"
+                        >Смотреть</ButtonsComponent
                     >
-                        {{ getMovieLength }}
-                    </div>
+                    <ButtonsComponent class="favourites-btn">
+                        <svg
+                            class="favorites-btn-svg"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 384 512"
+                        >
+                            <path
+                                d="M0 48C0 21.5 21.5 0 48 0l0 48 0 393.4 130.1-92.9c8.3-6 19.6-6 27.9 0L336 441.4 336 48 48 48 48 0 336 0c26.5 0 48 21.5 48 48l0 440c0 9-5 17.2-13 21.3s-17.6 3.4-24.9-1.8L192 397.5 37.9 507.5c-7.3 5.2-16.9 5.9-24.9 1.8S0 497 0 488L0 48z"
+                            />
+                        </svg>
+                    </ButtonsComponent>
+                    <ButtonsComponent>Узнать больше</ButtonsComponent>
                 </div>
             </div>
-            <div class="movie-short-description">
-                {{ getDescription }}
-            </div>
-            <div class="buttons-box">
-                <!--buttons x2-->
-                <ButtonsComponent class="play-now-btn"
-                    >Смотреть</ButtonsComponent
-                >
-                <ButtonsComponent class="favourites-btn">
-                    <svg
-                        class="favorites-btn-svg"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 384 512"
-                    >
-                        <path
-                            d="M0 48C0 21.5 21.5 0 48 0l0 48 0 393.4 130.1-92.9c8.3-6 19.6-6 27.9 0L336 441.4 336 48 48 48 48 0 336 0c26.5 0 48 21.5 48 48l0 440c0 9-5 17.2-13 21.3s-17.6 3.4-24.9-1.8L192 397.5 37.9 507.5c-7.3 5.2-16.9 5.9-24.9 1.8S0 497 0 488L0 48z"
-                        />
-                    </svg>
-                </ButtonsComponent>
-                <ButtonsComponent>Узнать больше</ButtonsComponent>
-            </div>
+            <ThePopularSection />
         </div>
-        <ThePopularSection />
     </div>
 </template>
 
@@ -251,6 +253,14 @@
         width: 100%;
         height: 100%;
         background-color: #00000081;
+    }
+
+    .home-container-main {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 15px;
     }
 
     .film-info-box {

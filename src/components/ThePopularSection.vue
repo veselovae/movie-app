@@ -85,7 +85,6 @@
         display: inline-block;
         height: 200px;
         width: 300px;
-        background-color: aqua;
         background-repeat: no-repeat;
         background-size: cover;
         position: relative;

@@ -17,7 +17,7 @@
         transform: translateX(-50%);
         width: 0;
         height: 2px;
-        background-color: #111;
+        background-color: #ffffff;
         content: "";
         transition: width 0.3s ease-out;
         z-index: 30;
