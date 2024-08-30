@@ -11,6 +11,27 @@
         "Фильмы",
         "Сериалы",
     ]);
+
+    const options: object = {
+        method: "GET",
+        headers: {
+            accept: "application/json",
+            "X-API-KEY": "DTJYGKA-TZXM1QK-NN48GZC-CFDX2FR",
+        },
+    };
+
+    let searchValue = ref<string>("");
+    let searchResults = ref([]);
+
+    const showSearchResults = async () => {
+        const response = await fetch(
+            `https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=10&query=${searchValue.value}`,
+            options
+        );
+        const res = await response.json();
+        searchResults.value = res.docs;
+        console.log(res);
+    };
 </script>
 <template>
     <header>
@@ -24,7 +45,38 @@
         </div>
 
         <div class="search-container">
+            <input
+                type="text"
+                class="search-inp"
+                @input="showSearchResults"
+                v-model="searchValue"
+            />
             <searchIcon class="search-icon" />
+            <div class="search-results">
+                <div class="search-results-empty" v-if="!searchResults">
+                    Нет результатов
+                </div>
+                <div class="search-results-items" v-else>
+                    <li
+                        class="search-results__item"
+                        v-for="item of searchResults"
+                        :key="item.id"
+                    >
+                        <div class="search-results__poster">
+                            <img :src="item.poster.url" />
+                        </div>
+                        <div class="search-name">
+                            <p>
+                                {{
+                                    item.name.length > 45
+                                        ? item.name.slice(0, 40) + "..."
+                                        : item.name
+                                }}
+                            </p>
+                        </div>
+                    </li>
+                </div>
+            </div>
         </div>
     </header>
 </template>
@@ -61,15 +113,89 @@
     }
 
     .search-container {
-        border: 1px #fff solid;
-        border-radius: 50%;
+        border: 2px #fff solid;
+        border-radius: 10px;
         cursor: pointer;
         display: flex;
+        position: relative;
     }
+
+    .search-inp {
+        width: 250px;
+        background: transparent;
+        border: 0;
+        border-radius: 20px;
+        color: #fff;
+        padding-left: 15px;
+    }
+
+    .search-inp:focus,
+    .search-inp:focus-visible,
+    .search-inp:active {
+        border: 0;
+        outline: 0;
+    }
+
     .search-icon {
         box-sizing: content-box !important;
+        position: relative;
+        right: 0;
         height: 20px;
         width: 20px;
         padding: 10px;
+        font-size: 20px;
+    }
+
+    .search-results {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 50px;
+        width: 290px;
+        /*height: 50px;*/
+        max-height: 370px;
+        border-radius: 5px;
+        background-color: #ffffffc7;
+        list-style: none;
+        overflow-y: scroll;
+        padding: 15px;
+    }
+
+    .search-inp:focus ~ .search-results {
+        display: block;
+    }
+
+    .search-results-empty {
+        color: #000;
+        font-size: 20px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-results__item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #000;
+        font-size: 17px;
+    }
+
+    .search-results__item:not(:last-child) {
+        margin-bottom: 5px;
+    }
+
+    .search-results__item:hover {
+        background-color: #c6c6c6;
+        border-radius: 5px;
+    }
+
+    .search-results__poster {
+        height: 80px;
+    }
+
+    .search-results__poster img {
+        height: 100%;
     }
 </style>

@@ -43,7 +43,7 @@
             class="popular-list"
             snap-align="start"
             :wrap-around="true"
-            :autoplay="1500"
+            :autoplay="3000"
             :transition="600"
             :pauseAutoplayOnHover="true"
         >

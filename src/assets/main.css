@@ -21,3 +21,23 @@
 .buttons-carousel:hover svg {
     fill: #000;
 }
+
+*::-webkit-scrollbar {
+    width: 8px;
+}
+*::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: transparent;
+    transition: background-color 0.2s linear;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #484848;
+    transition: background-color 0.2s linear;
+}
+
+*::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:active {
+    background-color: #1f1f1f;
+}
