@@ -32,6 +32,34 @@
         searchResults.value = res.docs;
         console.log(res);
     };
+
+    function debounce(callback, ms) {
+        return function perform(...args) {
+            let previousCall = this.lastCall;
+
+            this.lastCall = Date.now();
+
+            if (previousCall && this.lastCall - previousCall <= ms) {
+                clearTimeout(this.lastCallTimer);
+            }
+
+            this.lastCallTimer = setTimeout(() => callback(...args), ms);
+        };
+    }
+
+    const debouncedshowSearchResults = debounce(showSearchResults, 500);
+
+    const showRecomendations = async () => {
+        if (!searchValue.value) {
+            const response = await fetch(
+                `https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=10&query=''`,
+                options
+            );
+            const res = await response.json();
+            searchResults.value = res.docs;
+            console.log(res);
+        }
+    };
 </script>
 <template>
     <header>
@@ -48,12 +76,16 @@
             <input
                 type="text"
                 class="search-inp"
-                @input="showSearchResults"
+                @input="debouncedshowSearchResults"
+                @click="showRecomendations"
                 v-model="searchValue"
             />
             <searchIcon class="search-icon" />
             <div class="search-results">
-                <div class="search-results-empty" v-if="!searchResults">
+                <div
+                    class="search-results-empty"
+                    v-if="!searchResults.length && !searchValue"
+                >
                     Нет результатов
                 </div>
                 <div class="search-results-items" v-else>
