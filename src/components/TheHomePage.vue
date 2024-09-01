@@ -163,6 +163,8 @@
             ? recomendedMovie.value?.shortDescription
             : "";
     });
+
+    const showDetails = ref<boolean>(false);
 </script>
 
 <template>
@@ -208,12 +210,18 @@
                             />
                         </svg>
                     </ButtonsComponent>
-                    <ButtonsComponent>Узнать больше</ButtonsComponent>
+                    <ButtonsComponent @click="showDetails = true"
+                        >Узнать больше</ButtonsComponent
+                    >
                 </div>
             </div>
             <ThePopularSection />
         </div>
-        <TheContentCard :recomended-movie="recomendedMovie" />
+        <TheContentCard
+            :recomended-movie="recomendedMovie"
+            v-if="showDetails"
+            @close-details="showDetails = false"
+        />
     </div>
 </template>
 

@@ -142,12 +142,14 @@
             ? props.recomendedMovie?.ageRating
             : "";
     });
+
+    const emit = defineEmits(["close-details"]);
 </script>
 
 <template>
     <div class="content-box">
         <div class="content-card">
-            <TheXmarkIcon class="xmark-icon" />
+            <TheXmarkIcon class="xmark-icon" @click="emit('close-details')" />
             <div class="content-card__left-side one-side">
                 <h1 class="content-card__header">
                     {{ props.recomendedMovie?.name }}
@@ -168,7 +170,7 @@
                     {{ recomendedMovie?.description }}
                 </div>
 
-                <div class="content-card__slogan">
+                <div class="content-card__slogan" v-if="getSlogan">
                     <span>Слоган: </span>{{ getSlogan }}
                 </div>
             </div>
