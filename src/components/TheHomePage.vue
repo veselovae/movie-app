@@ -2,6 +2,30 @@
     import { onMounted, ref, computed } from "vue";
     import ButtonsComponent from "./ButtonsComponent.vue";
     import ThePopularSection from "./ThePopularSection.vue";
+    import TheContentCard from "./TheContentCard.vue";
+    import RatingBox from "./RatingBox.vue";
+
+    interface IPerson {
+        description: string;
+        enName: string | null;
+        enProfession: string;
+        id: number;
+        name: string;
+        photo: string | null;
+        profession: string;
+    }
+    interface ICountry {
+        name: string;
+    }
+
+    interface IPremiere {
+        bluray: string;
+        cinema: string;
+        digital: string;
+        dvd: string;
+        russia: string;
+        world: string;
+    }
 
     interface IMovie {
         ageRating: number | null;
@@ -12,7 +36,7 @@
             url: string;
         };
         budget?: object | null;
-        countries: object[] | null;
+        countries: ICountry[] | null;
         deleteedAt: any;
         description: string | null;
         distributors: any;
@@ -28,9 +52,9 @@
         name: string;
         names: any;
         networks: any;
-        persons: object[] | null;
+        persons: IPerson[] | null;
         poster: any;
-        premiere: object | null;
+        premiere: IPremiere | null;
         rating: {
             kp?: number;
             imdb?: number;
@@ -102,18 +126,6 @@
         return recomendedMovie.value?.name ? recomendedMovie.value?.name : "";
     });
 
-    const getIMDbRating = computed((): string => {
-        return recomendedMovie.value?.rating?.imdb
-            ? Math.floor(recomendedMovie.value.rating.imdb) + "/10"
-            : "";
-    });
-
-    const getKPRating = computed((): string => {
-        return recomendedMovie.value?.rating?.kp
-            ? Math.floor(recomendedMovie.value.rating.kp) + "/10"
-            : "";
-    });
-
     const getYear = computed((): string => {
         return recomendedMovie.value?.year
             ? String(recomendedMovie.value.year)
@@ -161,32 +173,7 @@
                 <!-- <h1>{{ getName }}</h1> -->
                 <h1>{{ getName }}</h1>
                 <div class="rating-and-details">
-                    <div class="rating-box">
-                        <div class="imdb-rating rating" v-if="getIMDbRating">
-                            <img
-                                src="../assets/IMDb_Logo.png"
-                                alt="IMDb"
-                                class="rating-logo imdb-logo"
-                            />
-                            <img
-                                src="../assets/star-icon.png"
-                                class="star-rating-logo"
-                            />
-                            <span>{{ getIMDbRating }}</span>
-                        </div>
-                        <div class="kp-rating rating" v-if="getKPRating">
-                            <img
-                                src="../assets/Kinopoisk_logo.png"
-                                alt="KP"
-                                class="rating-logo kp-logo"
-                            />
-                            <img
-                                src="../assets/star-icon.png"
-                                class="star-rating-logo"
-                            />
-                            <span>{{ getKPRating }}</span>
-                        </div>
-                    </div>
+                    <RatingBox :recomended-movie="recomendedMovie" />
                     <div class="movie-details">
                         <div class="year movie-details-item" v-if="getYear">
                             {{ getYear }}
@@ -226,6 +213,7 @@
             </div>
             <ThePopularSection />
         </div>
+        <TheContentCard :recomended-movie="recomendedMovie" />
     </div>
 </template>
 
@@ -282,33 +270,13 @@
     }
 
     .rating-and-details,
-    .rating,
-    .movie-details,
-    .rating-box {
+    .movie-details {
         display: flex;
         align-items: center;
     }
 
     .rating-and-details {
         margin-bottom: 30px;
-    }
-
-    .rating-box {
-        gap: 20px;
-        margin-right: 30px;
-    }
-
-    .rating {
-        gap: 5px;
-        align-items: center;
-    }
-
-    .rating-logo {
-        height: 20px;
-    }
-
-    .star-rating-logo {
-        height: 15px;
     }
 
     .movie-details {
