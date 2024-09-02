@@ -165,6 +165,10 @@
     });
 
     const showDetails = ref<boolean>(false);
+
+    const setRecomendedMovie = (targetMovie: IMovie): void => {
+        recomendedMovie.value = targetMovie;
+    };
 </script>
 
 <template>
@@ -215,7 +219,7 @@
                     >
                 </div>
             </div>
-            <ThePopularSection />
+            <ThePopularSection @set-target-movie="setRecomendedMovie" />
         </div>
         <TheContentCard
             :recomended-movie="recomendedMovie"

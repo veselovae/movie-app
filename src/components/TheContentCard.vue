@@ -212,7 +212,9 @@
                 <div class="content-card__column additional-info">
                     <div class="additional-info__countries" v-if="getCountries">
                         <span>{{
-                            getCountries.length > 1 ? "Страны:" : "Страна:"
+                            getCountries.indexOf(",") > 1
+                                ? "Страны:"
+                                : "Страна:"
                         }}</span>
                         <div class="countries-list">
                             {{ getCountries }}
@@ -328,6 +330,7 @@
     .content-card__right-side {
         display: flex;
         justify-content: space-between;
+        gap: 10px;
     }
 
     .content-card__actors {

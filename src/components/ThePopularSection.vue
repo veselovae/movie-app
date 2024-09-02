@@ -13,6 +13,77 @@
         pages: number;
     }
 
+    interface IPerson {
+        description: string;
+        enName: string | null;
+        enProfession: string;
+        id: number;
+        name: string;
+        photo: string | null;
+        profession: string;
+    }
+    interface ICountry {
+        name: string;
+    }
+
+    interface IPremiere {
+        bluray: string;
+        cinema: string;
+        digital: string;
+        dvd: string;
+        russia: string;
+        world: string;
+    }
+
+    interface IMovie {
+        ageRating: number | null;
+        alternativeName: string | null;
+        audience?: object[] | null;
+        backdrop: {
+            previeUrl: string | null;
+            url: string;
+        };
+        budget?: object | null;
+        countries: ICountry[] | null;
+        deleteedAt: any;
+        description: string | null;
+        distributors: any;
+        enName: string | null;
+        externalId: any;
+        facts: object[];
+        fees: any;
+        genres: object[] | null;
+        id: number;
+        isSeries: boolean | null;
+        lists: string[];
+        movieLength: number | null;
+        name: string;
+        names: any;
+        networks: any;
+        persons: IPerson[] | null;
+        poster: any;
+        premiere: IPremiere | null;
+        rating: {
+            kp?: number;
+            imdb?: number;
+        };
+        ratingMpaa: any;
+        seriesLength: any;
+        shortDescription: string | null;
+        slogan: string | null;
+        status: any;
+        ticketsOnSale: any;
+        top10: any;
+        top250: any;
+        totalSeriesLength: any;
+        type: string;
+        typeNumber: number | null;
+        updatedAt: any;
+        votes: any;
+        watchability: any;
+        year: number | null;
+    }
+
     const options: object = {
         method: "GET",
         headers: {
@@ -29,10 +100,15 @@
         const res: IPopularMovies = await response.json();
         popularMovies.value = res.docs;
         console.log(popularMovies.value);
-        console.log(res);
     };
 
     onMounted(() => getPopularMovies());
+    const emit = defineEmits(["set-target-movie"]);
+
+    const getSelectedMovie = (targetMovie: IMovie) => {
+        console.log(targetMovie);
+        emit("set-target-movie", targetMovie);
+    };
 </script>
 
 <template>
@@ -53,6 +129,7 @@
                     :key="movie.id"
                     class="popular-list-item"
                     :style="`background-image: url( ${movie.backdrop.url})`"
+                    @click="getSelectedMovie(movie)"
                 >
                     <div class="background-box"></div>
                     <span class="popular-movie-name">{{ movie.name }}</span>
@@ -118,6 +195,6 @@
         width: 90%;
         text-align: center;
         visibility: hidden;
-        transition: all 0.2s ease;
+        font-family: "Oswald", "Poppins", sans-serif;
     }
 </style>
