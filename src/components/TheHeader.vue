@@ -4,6 +4,8 @@
     import ItemOfNavigation from "./ItemOfNavigation.vue";
 
     import { ref } from "vue";
+    import { IMovie, IPopularMovies } from "./interface";
+
     const nvigationItems = ref<string[]>([
         "Главная",
         "Избранное",
@@ -21,19 +23,19 @@
     };
 
     let searchValue = ref<string>("");
-    let searchResults = ref([]);
+    let searchResults = ref<IMovie[] | null>([]);
 
     const showSearchResults = async () => {
         const response = await fetch(
             `https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=10&query=${searchValue.value}`,
             options
         );
-        const res = await response.json();
+        const res = (await response.json()) as IPopularMovies;
         searchResults.value = res.docs;
         console.log(res);
     };
 
-    function debounce(callback, ms) {
+    function debounce(callback: Function, ms: number) {
         return function perform(...args) {
             let previousCall = this.lastCall;
 
@@ -60,6 +62,8 @@
             console.log(res);
         }
     };
+
+    const emit = defineEmits(["open-selected-item"]);
 </script>
 <template>
     <header>
@@ -93,6 +97,7 @@
                         class="search-results__item"
                         v-for="item of searchResults"
                         :key="item.id"
+                        @click="emit('open-selected-item', item)"
                     >
                         <div class="search-results__poster">
                             <img :src="item.poster.url" />
@@ -193,7 +198,8 @@
         padding: 15px;
     }
 
-    .search-inp:focus ~ .search-results {
+    .search-inp:focus ~ .search-results,
+    .search-results:hover {
         display: block;
     }
 

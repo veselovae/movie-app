@@ -1,99 +1,13 @@
 <script setup lang="ts">
-    import { onMounted, ref, computed } from "vue";
+    import { onMounted, ref, computed, watch } from "vue";
     import ButtonsComponent from "./ButtonsComponent.vue";
     import ThePopularSection from "./ThePopularSection.vue";
     import TheContentCard from "./TheContentCard.vue";
     import RatingBox from "./RatingBox.vue";
 
-    interface IPerson {
-        description: string;
-        enName: string | null;
-        enProfession: string;
-        id: number;
-        name: string;
-        photo: string | null;
-        profession: string;
-    }
-    interface ICountry {
-        name: string;
-    }
-
-    interface IPremiere {
-        bluray: string;
-        cinema: string;
-        digital: string;
-        dvd: string;
-        russia: string;
-        world: string;
-    }
-
-    interface IMovie {
-        ageRating: number | null;
-        alternativeName: string | null;
-        audience?: object[] | null;
-        backdrop: {
-            previeUrl: string | null;
-            url: string;
-        };
-        budget?: object | null;
-        countries: ICountry[] | null;
-        deleteedAt: any;
-        description: string | null;
-        distributors: any;
-        enName: string | null;
-        externalId: any;
-        facts: object[];
-        fees: any;
-        genres: object[] | null;
-        id: number;
-        isSeries: boolean | null;
-        lists: string[];
-        movieLength: number | null;
-        name: string;
-        names: any;
-        networks: any;
-        persons: IPerson[] | null;
-        poster: any;
-        premiere: IPremiere | null;
-        rating: {
-            kp?: number;
-            imdb?: number;
-        };
-        ratingMpaa: any;
-        seriesLength: any;
-        shortDescription: string | null;
-        slogan: string | null;
-        status: any;
-        ticketsOnSale: any;
-        top10: any;
-        top250: any;
-        totalSeriesLength: any;
-        type: string;
-        typeNumber: number | null;
-        updatedAt: any;
-        votes: any;
-        watchability: any;
-        year: number | null;
-    }
+    import { IMovie } from "./interface";
 
     let recomendedMovie = ref<IMovie>(null);
-
-    // &year=2024
-
-    // const requiredFields = {
-    //     notNullFields: [
-    //         "id",
-    //         "year",
-    //         "genres.name",
-    //         "shortDescription",
-    //         "rating.kp",
-    //         "rating.imdb",
-    //         "movieLength",
-    //         "countries.name",
-    //         "persons.enName",
-    //         "backdrop.url",
-    //     ],
-    // };
 
     const options: object = {
         method: "GET",
@@ -104,13 +18,17 @@
     };
 
     const getRecommendedMovie = async () => {
+        // const response = await fetch(
+        //     "https://api.kinopoisk.dev/v1.4/movie/random?lists=popular-films&notNullFields=backdrop.url",
+        //     options
+        // );
         const response = await fetch(
-            "https://api.kinopoisk.dev/v1.4/movie/random?lists=popular-films&notNullFields=backdrop.url",
+            "https://api.kinopoisk.dev/v1.4/movie/random?notNullFields=backdrop.url&notNullFields=top250&type=movie",
             options
         );
         const res: IMovie = await response.json();
         recomendedMovie.value = res;
-        console.log(recomendedMovie.value);
+        console.log("recomendedMovie: ", recomendedMovie.value);
     };
 
     onMounted((): void => {
@@ -166,9 +84,28 @@
 
     const showDetails = ref<boolean>(false);
 
-    const setRecomendedMovie = (targetMovie: IMovie): void => {
-        recomendedMovie.value = targetMovie;
+    const setRecomendedMovie = async (targetMovie: IMovie) => {
+        const response = await fetch(
+            `https://api.kinopoisk.dev/v1.4/movie/${targetMovie.id}`,
+            options
+        );
+        const res: IMovie = await response.json();
+        recomendedMovie.value = res;
     };
+
+    const props = defineProps<{ itemFromSearch: IMovie | null }>();
+
+    watch(
+        () => props.itemFromSearch,
+        async () => {
+            const response = await fetch(
+                `https://api.kinopoisk.dev/v1.4/movie/${props.itemFromSearch.id}`,
+                options
+            );
+            const res: IMovie = await response.json();
+            recomendedMovie.value = res;
+        }
+    );
 </script>
 
 <template>

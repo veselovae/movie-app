@@ -3,86 +3,9 @@
     import "vue3-carousel/dist/carousel.css";
     import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 
+    import { IMovie, IPopularMovies } from "./interface";
+
     let popularMovies = ref(null);
-
-    interface IPopularMovies {
-        docs: Object[];
-        total: number;
-        limit: number;
-        page: number;
-        pages: number;
-    }
-
-    interface IPerson {
-        description: string;
-        enName: string | null;
-        enProfession: string;
-        id: number;
-        name: string;
-        photo: string | null;
-        profession: string;
-    }
-    interface ICountry {
-        name: string;
-    }
-
-    interface IPremiere {
-        bluray: string;
-        cinema: string;
-        digital: string;
-        dvd: string;
-        russia: string;
-        world: string;
-    }
-
-    interface IMovie {
-        ageRating: number | null;
-        alternativeName: string | null;
-        audience?: object[] | null;
-        backdrop: {
-            previeUrl: string | null;
-            url: string;
-        };
-        budget?: object | null;
-        countries: ICountry[] | null;
-        deleteedAt: any;
-        description: string | null;
-        distributors: any;
-        enName: string | null;
-        externalId: any;
-        facts: object[];
-        fees: any;
-        genres: object[] | null;
-        id: number;
-        isSeries: boolean | null;
-        lists: string[];
-        movieLength: number | null;
-        name: string;
-        names: any;
-        networks: any;
-        persons: IPerson[] | null;
-        poster: any;
-        premiere: IPremiere | null;
-        rating: {
-            kp?: number;
-            imdb?: number;
-        };
-        ratingMpaa: any;
-        seriesLength: any;
-        shortDescription: string | null;
-        slogan: string | null;
-        status: any;
-        ticketsOnSale: any;
-        top10: any;
-        top250: any;
-        totalSeriesLength: any;
-        type: string;
-        typeNumber: number | null;
-        updatedAt: any;
-        votes: any;
-        watchability: any;
-        year: number | null;
-    }
 
     const options: object = {
         method: "GET",
@@ -93,20 +16,25 @@
     };
 
     const getPopularMovies = async () => {
+        // const response = await fetch(
+        //     "https://api.kinopoisk.dev/v1.4/movie?page=1&limit=10&notNullFields=backdrop.url&lists=popular-films",
+        //     options
+        // );
         const response = await fetch(
-            "https://api.kinopoisk.dev/v1.4/movie?page=1&limit=10&selectFields=&notNullFields=backdrop.url&lists=popular-films",
+            "https://api.kinopoisk.dev/v1.4/movie?page=1&limit=10&notNullFields=backdrop.url&notNullFields=top250",
             options
         );
+
         const res: IPopularMovies = await response.json();
         popularMovies.value = res.docs;
-        console.log(popularMovies.value);
+        console.log("popularMovies: ", popularMovies.value);
     };
 
     onMounted(() => getPopularMovies());
     const emit = defineEmits(["set-target-movie"]);
 
     const getSelectedMovie = (targetMovie: IMovie) => {
-        console.log(targetMovie);
+        console.log("targetMovie pop: ", targetMovie);
         emit("set-target-movie", targetMovie);
     };
 </script>

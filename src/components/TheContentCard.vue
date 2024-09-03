@@ -4,76 +4,7 @@
     import RatingBox from "./RatingBox.vue";
     import TheXmarkIcon from "./icons/TheXmarkIcon.vue";
 
-    interface IPerson {
-        description: string;
-        enName: string | null;
-        enProfession: string;
-        id: number;
-        name: string;
-        photo: string | null;
-        profession: string;
-    }
-    interface ICountry {
-        name: string;
-    }
-
-    interface IPremiere {
-        bluray: string;
-        cinema: string;
-        digital: string;
-        dvd: string;
-        russia: string;
-        world: string;
-    }
-
-    interface IMovie {
-        ageRating: number | null;
-        alternativeName: string | null;
-        audience?: object[] | null;
-        backdrop: {
-            previeUrl: string | null;
-            url: string;
-        };
-        budget?: object | null;
-        countries: ICountry[] | null;
-        deleteedAt: any;
-        description: string | null;
-        distributors: any;
-        enName: string | null;
-        externalId: any;
-        facts: object[];
-        fees: any;
-        genres: object[] | null;
-        id: number;
-        isSeries: boolean | null;
-        lists: string[];
-        movieLength: number | null;
-        name: string;
-        names: any;
-        networks: any;
-        persons: IPerson[] | null;
-        poster: any;
-        premiere: IPremiere | null;
-        rating: {
-            kp?: number;
-            imdb?: number;
-        };
-        ratingMpaa: any;
-        seriesLength: any;
-        shortDescription: string | null;
-        slogan: string | null;
-        status: any;
-        ticketsOnSale: any;
-        top10: any;
-        top250: any;
-        totalSeriesLength: any;
-        type: string;
-        typeNumber: number | null;
-        updatedAt: any;
-        votes: any;
-        watchability: any;
-        year: number | null;
-    }
+    import { IMovie } from "./interface";
 
     const props = defineProps<{ recomendedMovie: IMovie | null }>();
 
@@ -92,10 +23,12 @@
     const getActors = computed(() => {
         let filtered = null;
         if (props.recomendedMovie) {
-            const persons = props.recomendedMovie?.persons;
-            filtered = persons
-                .filter((per) => per?.profession === "актеры")
-                .splice(0, 5);
+            if (props.recomendedMovie?.persons) {
+                const persons = props.recomendedMovie?.persons;
+                filtered = persons
+                    .filter((per) => per?.profession === "актеры")
+                    .splice(0, 5);
+            }
         }
         return filtered;
     });
@@ -103,12 +36,38 @@
     const getProducers = computed(() => {
         let filtered = null;
         if (props.recomendedMovie) {
-            const persons = props.recomendedMovie?.persons;
-            filtered = persons
-                .filter((per) => per?.profession === "режиссеры")
-                .splice(0, 2);
+            if (props.recomendedMovie?.persons) {
+                const persons = props.recomendedMovie?.persons;
+                filtered = persons
+                    .filter((per) => per?.profession === "режиссеры")
+                    .splice(0, 2);
+            }
         }
         return filtered;
+    });
+
+    const getType = computed(() => {
+        let typeRu = "";
+
+        switch (props.recomendedMovie?.type) {
+            case "animated-series":
+                typeRu = "Мультсериал";
+                break;
+            case "anime":
+                typeRu = "Аниме";
+                break;
+            case "cartoon":
+                typeRu = "Мультфильм";
+                break;
+            case "movie":
+                typeRu = "Фильм";
+                break;
+            case "tv-series":
+                typeRu = "Сериал";
+                break;
+        }
+
+        return typeRu;
     });
 
     const getCountries = computed(() => {
@@ -176,40 +135,46 @@
             </div>
             <div class="content-card__right-side one-side">
                 <div class="content-card__column">
-                    <div class="content-card__actors">
+                    <div class="content-card__actors" v-if="getActors">
                         <h3>В главных ролях:</h3>
                         <div
                             class="content-card__actor actors"
                             v-for="actor in getActors"
-                            :key="actor.name"
+                            :key="actor.name || actor.enName"
                         >
                             <img
                                 :src="actor.photo"
                                 class="actors__photo photo"
                             />
-                            <span class="actors__name">{{ actor.name }}</span>
+                            <span class="actors__name">{{
+                                actor.name || actor.enName
+                            }}</span>
                         </div>
                     </div>
 
-                    <div class="content-card__producers">
+                    <div class="content-card__producers" v-if="getProducers">
                         <h3>Режиссеры:</h3>
                         <div
                             class="content-card__producer producers"
                             v-for="producer in getProducers"
-                            :key="producer.name"
+                            :key="producer.name || producer.enName"
                         >
                             <img
                                 :src="producer.photo"
                                 class="producers__photo photo"
                             />
                             <span class="producers__name">{{
-                                producer.name
+                                producer.name || producer.enName
                             }}</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="content-card__column additional-info">
+                    <div class="additional-info__type" v-if="getType">
+                        <span>Тип:</span>
+                        {{ getType }}
+                    </div>
                     <div class="additional-info__countries" v-if="getCountries">
                         <span>{{
                             getCountries.indexOf(",") > 1
@@ -311,7 +276,8 @@
     .content-card__slogan span,
     .additional-info__countries span,
     .additional-info__fees span,
-    .additional-info__premiere span {
+    .additional-info__premiere span,
+    .additional-info__type span {
         font-weight: bold;
     }
 
@@ -351,6 +317,10 @@
 
     .photo {
         width: 40px;
+    }
+
+    .additional-info__type {
+        margin-bottom: 15px;
     }
 
     .additional-info__countries {
