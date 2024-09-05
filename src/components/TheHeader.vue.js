@@ -62,14 +62,26 @@ const showSearchResults = () => __awaiter(void 0, void 0, void 0, function* () {
     searchResults.value = res.docs;
     // console.log(res);
 });
-function debounce(callback, ms) {
-    return function perform(...args) {
-        let previousCall = this.lastCall;
-        this.lastCall = Date.now();
-        if (previousCall && this.lastCall - previousCall <= ms) {
-            clearTimeout(this.lastCallTimer);
+// function debounce(callback: Function, ms: number) {
+//     return function perform(...args: any[]) {
+//         let previousCall = this.lastCall;
+//         this.lastCall = Date.now();
+//         if (previousCall && this.lastCall - previousCall <= ms) {
+//             clearTimeout(this.lastCallTimer);
+//         }
+//         this.lastCallTimer = setTimeout(() => callback(...args), ms);
+//     };
+// }
+function debounce(fn, wait) {
+    let timer;
+    return function (...args) {
+        if (timer) {
+            clearTimeout(timer); // clear any pre-existing timer
         }
-        this.lastCallTimer = setTimeout(() => callback(...args), ms);
+        const context = this; // get the current context
+        timer = setTimeout(() => {
+            fn.apply(context, args); // call the function if time expires
+        }, wait);
     };
 }
 const debouncedshowSearchResults = debounce(showSearchResults, 500);
