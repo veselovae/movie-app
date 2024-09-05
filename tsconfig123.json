@@ -3,12 +3,12 @@
         "outDir": "./dist",
         "allowJs": false,
         "target": "es6",
-        // "allowUnreachableCode": false,
-        // "noImplicitReturns": true,
-        // "noImplicitAny": true,
+        "allowUnreachableCode": false,
+        "noImplicitReturns": true,
+        "noImplicitAny": true,
         "typeRoots": ["./typings"],
-        "moduleResolution": "NodeNext",
-        "module": "NodeNext"
+        "moduleResolution": "node16",
+        "module": "node16"
     },
     "include": ["./**/*"],
     // "files": [],
