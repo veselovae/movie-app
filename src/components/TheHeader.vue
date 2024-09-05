@@ -32,7 +32,7 @@
         );
         const res = (await response.json()) as IPopularMovies;
         searchResults.value = res.docs;
-        console.log(res);
+        // console.log(res);
     };
 
     function debounce(callback: Function, ms: number) {
@@ -64,6 +64,10 @@
     };
 
     const emit = defineEmits(["open-selected-item"]);
+    const selectItem = (item: IMovie) => {
+        emit("open-selected-item", item);
+        searchValue.value = "";
+    };
 </script>
 <template>
     <header>
@@ -97,7 +101,7 @@
                         class="search-results__item"
                         v-for="item of searchResults"
                         :key="item.id"
-                        @click="emit('open-selected-item', item)"
+                        @click="selectItem(item)"
                     >
                         <div class="search-results__poster">
                             <img :src="item.poster.url" />
