@@ -35,17 +35,16 @@
         // console.log(res);
     };
 
-    function debounce(callback: Function, ms: number) {
-        return function perform(...args: any[]) {
-            let previousCall = this.lastCall;
-
-            this.lastCall = Date.now();
-
-            if (previousCall && this.lastCall - previousCall <= ms) {
-                clearTimeout(this.lastCallTimer);
+    function debounce(fn: Function, wait: number) {
+        let timer: any;
+        return function (...args: any[]) {
+            if (timer) {
+                clearTimeout(timer);
             }
-
-            this.lastCallTimer = setTimeout(() => callback(...args), ms);
+            const context = this;
+            timer = setTimeout(() => {
+                fn.apply(context, args);
+            }, wait);
         };
     }
 
