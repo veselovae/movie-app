@@ -36,7 +36,7 @@
     };
 
     function debounce(callback: Function, ms: number) {
-        return function perform(...args) {
+        return function perform(...args: any[]) {
             let previousCall = this.lastCall;
 
             this.lastCall = Date.now();
