@@ -3,7 +3,7 @@ export interface IMovie {
     alternativeName: string | null;
     audience?: object[] | null;
     backdrop: {
-        previeUrl: string | null;
+        previewUrl: string | null;
         url: string;
     };
     budget?: object | null;
@@ -19,7 +19,7 @@ export interface IMovie {
     genres: object[] | null;
     id: number;
     images?: object;
-    imgesInfo?: object;
+    imagesInfo?: object;
     isSeries?: boolean | null;
     lists: string[];
     logo?: {
@@ -31,36 +31,50 @@ export interface IMovie {
     networks?: any;
     persons?: IPerson[] | null;
     poster: any;
-    premiere: IPremiere | null;
-    productionCompanies?: [];
+    premiere: IPremiere;
+    productionCompanies?: IProductionCompany[];
     rating: {
-        kp?: number;
-        imdb?: number;
+        kp?: number | null;
+        imdb?: number | null;
+        filmCritics?: any;
+        russianFilmCritics?: any;
+        await: any;
     };
     ratingMpaa: any;
+    seasonsInfo?: any;
+    sequelsAndPrequels?: any;
     seriesLength?: any;
     shortDescription: string | null;
+    similarMovies?: any;
     slogan?: string | null;
+    spokenLanguages?: any;
     status: any;
+    technology?: any;
     ticketsOnSale: any;
     top10: any;
     top250: any;
     totalSeriesLength?: any;
-    type: string;
+    type: string | null;
     typeNumber: number | null;
     updatedAt: any;
+    videos?: any;
     votes: any;
     watchability: any;
     year: number | null;
 }
+interface IProductionCompany {
+    name: string;
+    previewUrl: string | null;
+    url: string | null;
+}
 
-interface IPerson {
-    description: string;
+export interface IPerson {
+    description: string | null;
     enName: string | null;
-    enProfession: string;
+    enProfession: string | null;
     id: number;
     name: string;
-    photo: string | null;
+    photo: string;
     profession: string;
 }
 
@@ -69,12 +83,12 @@ interface ICountry {
 }
 
 interface IPremiere {
-    bluray: string;
-    cinema: string;
-    digital: string;
-    dvd: string;
-    russia: string;
-    world: string;
+    bluray: string | null;
+    cinema: string | null;
+    digital: string | null;
+    dvd: string | null;
+    russia: string | null;
+    world: string | null;
 }
 
 export interface IPopularMovies {

@@ -4,7 +4,7 @@
     import RatingBox from "./RatingBox.vue";
     import TheXmarkIcon from "./icons/TheXmarkIcon.vue";
 
-    import { IMovie } from "./interface";
+    import { IMovie, IPerson } from "./interface";
 
     const props = defineProps<{ recomendedMovie: IMovie | null }>();
 
@@ -20,8 +20,8 @@
             : "";
     });
 
-    const getActors = computed(() => {
-        let filtered = null;
+    const getActors = computed((): IPerson[] | null => {
+        let filtered: IPerson[] | null = null;
         if (props.recomendedMovie) {
             if (props.recomendedMovie?.persons) {
                 const persons = props.recomendedMovie?.persons;
@@ -33,8 +33,8 @@
         return filtered;
     });
 
-    const getProducers = computed(() => {
-        let filtered = null;
+    const getProducers = computed((): IPerson[] | null => {
+        let filtered: IPerson[] | null = null;
         if (props.recomendedMovie) {
             if (props.recomendedMovie?.persons) {
                 const persons = props.recomendedMovie?.persons;
@@ -45,7 +45,6 @@
         }
         return filtered;
     });
-
     const getType = computed(() => {
         let typeRu = "";
 
@@ -77,7 +76,10 @@
     });
 
     const getFees = computed(() => {
-        return props.recomendedMovie?.fees ? props.recomendedMovie?.fees : "";
+        return props.recomendedMovie?.fees?.russia ||
+            props.recomendedMovie?.fees?.world
+            ? props.recomendedMovie?.fees
+            : "";
     });
 
     const getPremiereWorld = computed(() => {
@@ -140,7 +142,7 @@
                         <div
                             class="content-card__actor actors"
                             v-for="actor in getActors"
-                            :key="actor.name || actor.enName"
+                            :key="actor.name ?? actor.enName"
                         >
                             <img
                                 :src="actor.photo"
@@ -157,7 +159,7 @@
                         <div
                             class="content-card__producer producers"
                             v-for="producer in getProducers"
-                            :key="producer.name || producer.enName"
+                            :key="producer.name ?? producer.enName"
                         >
                             <img
                                 :src="producer.photo"
@@ -197,7 +199,10 @@
                         </div>
                     </div>
 
-                    <div class="additional-info__premiere">
+                    <div
+                        class="additional-info__premiere"
+                        v-if="getPremiereWorld || getPremiereRussia"
+                    >
                         <div class="premiere-world" v-if="getPremiereWorld">
                             <span>Премьера в мире: </span>{{ getPremiereWorld }}
                         </div>
