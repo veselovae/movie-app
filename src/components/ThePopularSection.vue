@@ -5,7 +5,7 @@
 
     import { IMovie, IPopularMovies } from "./interface";
 
-    let popularMovies = ref(null);
+    let popularMovies = ref<IMovie[] | null>(null);
 
     const options: object = {
         method: "GET",
